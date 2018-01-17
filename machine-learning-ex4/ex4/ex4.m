@@ -183,10 +183,18 @@ fprintf('\nTraining Neural Network... \n')
 
 %  After you have completed the assignment, change the MaxIter to a larger
 %  value to see how more training helps.
-options = optimset('MaxIter', 50);
+options = optimset('MaxIter', 400);
 
 %  You should also try different values of lambda
 lambda = 1;
+
+%% =================== Varying Lambda / Iterations ===================
+% The increase in iterations makes the training more accurate.
+% Reducing lambda overfits the training data. It is possible to get 100%
+% Note that when visualized, the hidden units look "staticy" and "noisy"
+% with no clear patterns. This is probably due to overfitting on specific
+% features of the various training data instead of finding generalized
+% patterns.
 
 % Create "short hand" for the cost function to be minimized
 costFunction = @(p) nnCostFunction(p, ...
