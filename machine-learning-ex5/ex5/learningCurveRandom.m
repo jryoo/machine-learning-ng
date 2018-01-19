@@ -1,5 +1,5 @@
 function [error_train, error_val] = ...
-    learningCurve(X, y, Xval, yval, lambda)
+    learningCurveRandom(X, y, Xval, yval, lambda)
 %LEARNINGCURVE Generates the train and cross validation set errors needed 
 %to plot a learning curve
 %   [error_train, error_val] = ...
@@ -16,13 +16,23 @@ function [error_train, error_val] = ...
 
 % Number of training examples
 m = size(X, 1);
+random_samples = 50;
 
 for i=1:m,
-    ts_x = X(1:i,:);
-    ts_y = y(1:i);
-    ts_theta = trainLinearReg(ts_x, ts_y, lambda);
-    error_train(i,1) = linearRegCostFunction(ts_x, ts_y, ts_theta, 0);
-    error_val(i,1) = linearRegCostFunction(Xval, yval, ts_theta, 0);
+    error_train_i = 0;
+    error_val_i = 0;
+    for j=1:random_samples,
+        rndIDX = randperm(m);
+        rnd_ts_x = X(rndIDX(1:i),:);
+        rnd_ts_y = y(rndIDX(1:i));
+        rnd_val_x = Xval(rndIDX(1:i),:);
+        rnd_val_y = yval(rndIDX(1:i));
+        ts_theta = trainLinearReg(rnd_ts_x, rnd_ts_y, lambda);
+        error_train_i = error_train_i + linearRegCostFunction(rnd_ts_x, rnd_ts_y, ts_theta, 0);
+        error_val_i = error_val_i + linearRegCostFunction(rnd_val_x, rnd_val_y, ts_theta, 0);
+    end
+    error_train(i,1) = error_train_i / random_samples;
+    error_val(i,1) = error_val_i / random_samples;
 end;
 
 % You need to return these values correctly
